@@ -42,8 +42,10 @@ def get_lsm_description(
             ordinates = list(ordinates)
         except:
             raise TypeError
+        
     if len(abscissa) <= 2 or len(ordinates) <= 2:
         raise ValueError
+    
     if mismatch_strategy == MismatchStrategies.FALL and len(abscissa) != len(ordinates):
         raise RuntimeError
     elif mismatch_strategy == MismatchStrategies.CUT:
@@ -52,13 +54,15 @@ def get_lsm_description(
     elif not (mismatch_strategy == MismatchStrategies.FALL
               or mismatch_strategy == MismatchStrategies.CUT):
         raise ValueError
+    
     for i in range(len(ordinates)):
         if (not isinstance(ordinates[i], Real)) or (not isinstance(abscissa[i], Real)):
             raise ValueError
     n = len(abscissa)
     aver_x = sum(abscissa) / n
     aver_y = sum(ordinates) / n
-    aver_xy = sum([abscissa[i] * ordinates[i] for i in range(n)]) / n
+    aver_xy = sum([abscissa[i] * ordinates[i]
+                    for i in range(n)]) / n
     aver_xx = sum([elem ** 2 for elem in abscissa]) / n
 
     a = (aver_xy - aver_x * aver_y) / (aver_xx - aver_x ** 2)
@@ -131,7 +135,7 @@ def get_report(
                 "\n\n[INFO]: incline: {};\n[INFO]: shift: {};\n[INFO]: "
                 "incline error: {};\n[INFO]: shift error: {};\n\n" + "=" * 100
                 )
-    incline = format(lsm_description.incline, '.3f')
+    incline = format(lsm_description.incline, f'.{PRECISION}f')
     shift = lsm_description.shift
     incline_error = lsm_description.incline_error
     shift_error = lsm_description.shift_error
